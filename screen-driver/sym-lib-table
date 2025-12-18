@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "AXT_60124")(type "KiCad")(uri "${KIPRJMOD}/connectors/footprints.pretty/AXT_60124.kicad_sym")(options "")(descr ""))
+)
