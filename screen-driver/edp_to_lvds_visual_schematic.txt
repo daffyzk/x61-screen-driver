@@ -1,0 +1,179 @@
+================================================================================
+         eDP to LVDS CONVERTER - VISUAL SCHEMATIC DIAGRAM
+         Framework 13 → PTN3460 → HV121P01-101 (1400x1050)
+================================================================================
+
+
+                         ┌─────────────────────────────────────────────────────────────────┐
+                         │                                                                 │
+    FRAMEWORK 13         │                      PTN3460IBS                                 │         HV121P01-101
+    eDP OUTPUT           │                      (HVQFN56)                                  │         LVDS PANEL
+                         │                                                                 │
+  ┌──────────────┐       │  ┌─────────────────────────────────────────────────────────┐   │       ┌──────────────┐
+  │              │       │  │                                                         │   │       │              │
+  │  DP_LANE0_P  ├──C13──┼──┤ 4  DP0_P                                 LVSAO_P  53   ├───┼───────┤ RIN0+ (6)    │
+  │  DP_LANE0_N  ├──C14──┼──┤ 5  DP0_N                                 LVSAO_N  54   ├───┼───────┤ RIN0- (5)    │
+  │              │       │  │                                                         │   │       │              │
+  │  DP_LANE1_P  ├──C15──┼──┤ 7  DP1_P                                 LVSBO_P  52   ├───┼───────┤ RIN1+ (9)    │
+  │  DP_LANE1_N  ├──C16──┼──┤ 8  DP1_N                                 LVSBO_N  51   ├───┼───────┤ RIN1- (8)    │
+  │              │       │  │                                                         │   │       │              │
+  │  AUX_P       ├──C17──┼──┤ 2  AUX_P                                 LVSCO_P  48   ├───┼───────┤ RIN2+ (12)   │
+  │  AUX_N       ├──C18──┼──┤ 1  AUX_N                                 LVSCO_N  49   ├───┼───────┤ RIN2- (11)   │
+  │              │       │  │                                                         │   │       │              │
+  │  HPD         ├───────┼──┤11  HPDRX                                LVSCKO_P  46   ├───┼───────┤ CLKIN+ (15)  │
+  │              │       │  │                                         LVSCKO_N  47   ├───┼───────┤ CLKIN- (14)  │
+  │              │       │  │                                                         │   │       │              │
+  │  +3.3V       ├───────┼──┤    VDD3V3 (13,14,38,50)                    DDC_SCL 29   ├─┬─┼───────┤ EDID_CLK(19) │
+  │  GND         ├───────┼──┤    GND (3,17,18,PAD)                       DDC_SDA 30   ├─┼─┼───────┤ EDID_DAT(20) │
+  │              │       │  │                                                         │ │ │       │              │
+  │  (Lane 2,3   │       │  │                                           PVCCEN  33   ├─┼─┼──NC   │ VDD (1,2)────┼──+3.3V
+  │   unused)    │       │  │                                           BKLTEN  26   ├─┼─┼──────►│ LED_EN       │
+  │              │       │  │                                             PWMO  28   ├─┼─┼──────►│ LED_PWM      │
+  └──────────────┘       │  │                                                         │ │ │       │              │
+                         │  │    CONFIG PINS:                                         │ │ │       │ GND(3,4,7,   │
+       J1                │  │    ─────────────                                        │ │ │       │ 10,13,16,18) ├──GND
+   40-pin eDP            │  │                                                         │ │ │       │              │
+                         │  │    20 TESTMODE ◄────R5(10k)────GND                      │ │ │       └──────────────┘
+                         │  │    21 CFG1 ◄────────────────────GND  (Single LVDS)      │ │ │             J2
+                         │  │    22 CFG2 ◄────R6(10k)────VDD3V3    (18bpp)            │ │ │        20-pin LVDS
+                         │  │    23 CFG3 ◄────────────────────GND  (2-lane eDP)       │ │ │
+                         │  │    27 CFG4 ◄────R7(10k)────GND       (EDID emulation)   │ │ │
+                         │  │                                                         │ │ │
+                         │  │    CONTROL:                                             │ │ │
+                         │  │    ────────                                             │ │ │
+                         │  │     9 RST_N ◄────R8(10k)────VDD3V3                      │ │ │
+                         │  │    10 PD_N  ◄────R9(10k)────VDD3V3                      │ │ │
+                         │  │    56 EPS_N ◄────R10(10k)───VDD3V3   (Use int. 1.8V)    │ │ │
+                         │  │    12 DEV_CFG ◄──R11(10k)───GND      (I2C addr 0x40)    │ │ │
+                         │  │                                                         │ │ │
+                         │  │    I2C PROGRAMMING:                                     │ │ │
+                         │  │    ────────────────                                     │ │ │
+                         │  │    24 MS_SDA ◄───R14(2.2k)──VDD3V3 ──────────┐          │ │ │
+                         │  │    25 MS_SCL ◄───R13(2.2k)──VDD3V3 ────────┐ │          │ │ │
+                         │  │                                            │ │          │ │ │
+                         │  └────────────────────────────────────────────┼─┼──────────┘ │ │
+                         │                                               │ │            │ │
+                         └───────────────────────────────────────────────┼─┼────────────┘ │
+                                                                         │ │              │
+                                                                         │ │   I2C       │
+                                 ┌───────────┐                           │ │  Pull-ups   │
+                                 │ J3 (HDR)  │                           │ │      │      │
+                                 │  1: VDD   ├───VDD3V3                  │ │      │      │
+                                 │  2: SCL   ├───────────────────────────┘ │   R3(2.2k)  │
+                                 │  3: SDA   ├─────────────────────────────┘      │      │
+                                 │  4: GND   ├───GND                          VDD3V3    │
+                                 └───────────┘                                          │
+                                I2C Programming                                         │
+                                    Header                                              │
+
+
+================================================================================
+                              POWER SUPPLY SECTION
+================================================================================
+
+                                           ┌────────────────────────────────────┐
+        +3.3V_IN ──────┬───────────────────┤  VDD3V3 DISTRIBUTION               │
+        (from eDP)     │                   │                                    │
+                       │                   │  Pin 13 ──┬── C4(0.1µF) ── GND     │
+                      C1                   │  Pin 14 ──┼── C5(0.1µF) ── GND     │
+                     2.2µF                 │  Pin 38 ──┼── C6(0.1µF) ── GND     │
+                       │                   │  Pin 50 ──┴── C7(0.1µF) ── GND     │
+                      GND                  │                                    │
+                                           └────────────────────────────────────┘
+
+                                           ┌────────────────────────────────────┐
+                                           │  1.8V REGULATOR OUTPUT (Pin 19)    │
+                                           │                                    │
+        Pin 19 (VDD1V8_REG) ───┬───────────┤  ──┬── C8(4.7µF) ── GND            │
+                               │           │    │                               │
+                              L2           │    └── C9(0.1µF) ── GND            │
+                             (FB)          │                                    │
+                               │           │  VDD1V8 DISTRIBUTION:              │
+                               └─ VDD1V8 ──┤                                    │
+                                           │  Pin 6  ──┬── C10(2.2µF)── GND     │
+                                           │           └── C11(0.1µF)── GND     │
+                                           │  Pin 45 ──── C12(0.1µF)── GND      │
+                                           │                                    │
+                                           └────────────────────────────────────┘
+
+
+================================================================================
+                            LVDS SIGNAL MAPPING
+================================================================================
+
+    PTN3460 Output          Signal Content              Panel Input
+    ──────────────          ──────────────              ───────────
+    LVSAO_P/N (53/54)  →    R0-R5, G0 (Ch A)       →   RIN0+/- (6/5)
+    LVSBO_P/N (52/51)  →    G1-G5, B0, B1 (Ch B)  →   RIN1+/- (9/8)
+    LVSCO_P/N (48/49)  →    B2-B5, HS, VS, DE (Ch C) → RIN2+/- (12/11)
+    LVSCKO_P/N (46/47) →    Pixel Clock            →   CLKIN+/- (15/14)
+
+    Note: Using "Odd" bus outputs only (single channel mode)
+          "Even" bus outputs (pins 31-42) are unused
+          Channel D outputs (pins 43/44) unused in 18bpp mode
+
+
+================================================================================
+                         CONFIGURATION SUMMARY
+================================================================================
+
+    ┌────────────┬─────────┬───────────────────────────────────────┐
+    │ Pin        │ Setting │ Function                              │
+    ├────────────┼─────────┼───────────────────────────────────────┤
+    │ TESTMODE   │ LOW     │ Enable CFG pins (not JTAG)            │
+    │ CFG1       │ LOW     │ Single LVDS bus                       │
+    │ CFG2       │ HIGH    │ 18bpp (6-bit per color)               │
+    │ CFG3       │ LOW     │ 2-lane eDP input                      │
+    │ CFG4       │ LOW     │ EDID emulation from internal flash    │
+    │ EPS_N      │ HIGH    │ Use internal 1.8V regulator           │
+    │ RST_N      │ HIGH    │ Normal operation (not reset)          │
+    │ PD_N       │ HIGH    │ Normal operation (not power down)     │
+    │ DEV_CFG    │ LOW     │ I2C slave address = 0x40              │
+    └────────────┴─────────┴───────────────────────────────────────┘
+
+
+================================================================================
+                            TYPICAL VALUES
+================================================================================
+
+    Power consumption:     ~300-450mW (active, single supply)
+    Input voltage:         3.3V ± 10%
+    LVDS output swing:     300mV differential (default)
+    Pixel clock:           84.8 MHz (1400x1050 @ 60Hz)
+    eDP link rate:         2.7 Gbps (HBR) or 1.62 Gbps (RBR)
+
+
+================================================================================
+                        ESTIMATED BOARD SIZE
+================================================================================
+
+                    ┌──────────────────────────────────────┐
+                    │                                      │
+                    │    ┌──────┐                          │
+                    │    │      │                          │
+            J1 ═════╡    │ U1   │    ○ ○ ○ ○  J3           │
+           eDP      │    │      │    (I2C)                 │
+                    │    └──────┘                          │
+                    │         ▪▪▪▪▪▪▪▪  (caps)             │
+                    │                                      ╞═════ J2
+                    │    R R R R R R  (config)             │      LVDS
+                    │                                      │
+                    └──────────────────────────────────────┘
+                    
+                    Approximate size: 35mm x 25mm (4-layer)
+
+
+================================================================================
+                                NOTES
+================================================================================
+
+1. All capacitors: X5R or X7R ceramic, 0402 or 0603 package
+2. All resistors: 0402 or 0603 package, 1% tolerance
+3. Ferrite beads: High frequency type, e.g., BLM18AG601
+4. Use 4-layer PCB with solid ground plane
+5. Match differential pair lengths within 5 mils
+6. Keep eDP and LVDS traces short and direct
+7. Ensure good thermal connection for center pad
+8. AC coupling caps (C13-C18) should be close to PTN3460
+
+================================================================================
